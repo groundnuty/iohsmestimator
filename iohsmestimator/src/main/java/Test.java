@@ -4,11 +4,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 @Path("/test")
 public class Test {
-	Logger LOGGER = Logger.getLogger(Test.class);
+	Logger LOGGER = LoggerFactory.getLogger(Test.class);
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

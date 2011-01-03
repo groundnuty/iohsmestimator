@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 
@@ -17,7 +18,8 @@ public class ConfigProperties extends Properties {
 	private ConfigProperties() throws FileNotFoundException, IOException {
 		super();
 		System.out.println(new File(".").getAbsolutePath());
-		load(new FileInputStream(new File("config.properties")));
+	
+		load(getClass().getResourceAsStream("/config.properties"));
 	}
 	
 	public static synchronized ConfigProperties getProperties(){

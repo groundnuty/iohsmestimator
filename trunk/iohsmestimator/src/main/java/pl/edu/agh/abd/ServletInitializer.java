@@ -26,7 +26,7 @@ public class ServletInitializer implements ServletContextListener {
 		
 		Properties props = ConfigProperties.getProperties();
 		Timer timer = new Timer();
-		timer.schedule(es, 500, Long.parseLong("5") * 1000);
+		timer.schedule(es, 500, Long.parseLong(props.getProperty(ESTIMATE_INTERVAL)) * 1000);
 	}
 
 }

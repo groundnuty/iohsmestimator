@@ -9,12 +9,15 @@ import java.util.Properties;
 public class ConfigProperties extends Properties {
 
 	public static String KEY1 = "key1";
+	public static String ESTIMATE_INTERVAL = "estimateInterval";
+	
 	private static ConfigProperties INSTANCE;
+	
 	
 	private ConfigProperties() throws FileNotFoundException, IOException {
 		super();
 		System.out.println(new File(".").getAbsolutePath());
-		load(new FileInputStream(new File("src/main/resources/config.properties")));
+		load(new FileInputStream(new File("config.properties")));
 	}
 	
 	public static synchronized ConfigProperties getProperties(){

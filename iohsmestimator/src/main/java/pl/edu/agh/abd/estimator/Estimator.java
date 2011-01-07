@@ -2,6 +2,9 @@ package pl.edu.agh.abd.estimator;
 
 import pl.edu.agh.abd.estimator.mocks.*;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.Map;
 import java.util.Properties;
@@ -22,7 +25,13 @@ public class Estimator {
 
 	public Estimator(HSMMonPortType ms){
 		monitoringDevice = ms;
-        properties = new Properties() ;//(CONFIGURATION_PATH);
+        properties = new Properties();
+        try {
+            properties.loadFromXML(new FileInputStream(new File(CONFIGURATION_PATH)));
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        ;//(CONFIGURATION_PATH);
     }
 
         public Map<String, Tape> getTapeMap() throws RemoteException {

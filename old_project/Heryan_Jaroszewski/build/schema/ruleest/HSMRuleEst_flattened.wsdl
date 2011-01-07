@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="HSMMonService" targetNamespace="http://www.gforge.cyfronet.pl/namespaces/hsmest/ruleest" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:wsrpw="http://docs.oasis-open.org/wsrf/2004/06/wsrf-WS-ResourceProperties-1.2-draft-01.wsdl" xmlns:wsdlpp="http://www.globus.org/namespaces/2004/10/WSDLPreprocessor" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/03/addressing" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://www.gforge.cyfronet.pl/namespaces/hsmest/ruleest" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsrp="http://docs.oasis-open.org/wsrf/2004/06/wsrf-WS-ResourceProperties-1.2-draft-01.xsd">
+  <import namespace="http://docs.oasis-open.org/wsrf/2004/06/wsrf-WS-ResourceProperties-1.2-draft-01.wsdl" location="../wsrf/properties/WS-ResourceProperties.wsdl"/>
+  <types>
+    <xsd:schema targetNamespace="http://www.gforge.cyfronet.pl/namespaces/hsmest/ruleest" xmlns:tns="http://www.gforge.cyfronet.pl/namespaces/hsmest/ruleest" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<xsd:import namespace="http://schemas.xmlsoap.org/ws/2004/03/addressing" schemaLocation="../ws/addressing/WS-Addressing.xsd"/>
+
+
+      <!-- DEFINITIONS OF DATA TYPES -->
+
+      <!-- ReadTimeSummary definition -->
+      <xsd:element name="Estimation">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element maxOccurs="1" minOccurs="1" name="latency" type="xsd:float"/>
+            <xsd:element maxOccurs="1" minOccurs="1" name="bandwidth" type="xsd:float"/>
+            <xsd:element maxOccurs="1" minOccurs="1" name="size" type="xsd:int"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+
+      <xsd:element name="fileName" type="xsd:string"/>
+
+    </xsd:schema>
+  </types>
+  <message name="EstimateReadOutMsg">
+    <part name="estimation" element="tns:Estimation"/>
+  </message>
+  <message name="EstimateReadInMsg">
+    <part name="fileName" element="tns:fileName"/>
+  </message>
+  <portType name="HSMRuleEstPortType">
+    <operation name="estimateRead">
+      <input message="tns:EstimateReadInMsg"/>
+      <output message="tns:EstimateReadOutMsg"/>
+    </operation>
+    <operation name="GetResourceProperty">
+      <input name="GetResourcePropertyRequest" message="wsrpw:GetResourcePropertyRequest" wsa:Action="http://docs.oasis-open.org/wsrf/2004/06/wsrf-WS-ResourceProperties/GetResourceProperty"/>
+      <output name="GetResourcePropertyResponse" message="wsrpw:GetResourcePropertyResponse" wsa:Action="http://docs.oasis-open.org/wsrf/2004/06/wsrf-WS-ResourceProperties/GetResourcePropertyResponse"/>
+      <fault name="InvalidResourcePropertyQNameFault" message="wsrpw:InvalidResourcePropertyQNameFault"/>
+      <fault name="ResourceUnknownFault" message="wsrpw:ResourceUnknownFault"/>
+    </operation>
+  </portType>
+</definitions>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="HSMMonService"
+             targetNamespace="http://www.gforge.cyfronet.pl/namespaces/hsmest/ruleest"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:tns="http://www.gforge.cyfronet.pl/namespaces/hsmest/ruleest"
+             xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:wsrp="http://docs.oasis-open.org/wsrf/2004/06/wsrf-WS-ResourceProperties-1.2-draft-01.xsd"
+             xmlns:wsrpw="http://docs.oasis-open.org/wsrf/2004/06/wsrf-WS-ResourceProperties-1.2-draft-01.wsdl"
+             xmlns:wsdlpp="http://www.globus.org/namespaces/2004/10/WSDLPreprocessor"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <wsdl:import
+    namespace=
+    "http://docs.oasis-open.org/wsrf/2004/06/wsrf-WS-ResourceProperties-1.2-draft-01.wsdl"
+    location="../wsrf/properties/WS-ResourceProperties.wsdl" />
+
+
+  <!--============================================================
+
+                      T Y P E S
+
+  ============================================================-->
+  <types>
+    <xsd:schema targetNamespace="http://www.gforge.cyfronet.pl/namespaces/hsmest/ruleest"
+                xmlns:tns="http://www.gforge.cyfronet.pl/namespaces/hsmest/ruleest"
+                xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+      <!-- DEFINITIONS OF DATA TYPES -->
+
+      <!-- ReadTimeSummary definition -->
+      <xsd:element name="Estimation">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="latency" type="xsd:float" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="bandwidth" type="xsd:float" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="size" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+
+      <xsd:element name="fileName" type="xsd:string" />
+
+    </xsd:schema>
+
+
+    <!-- RESOURCE PROPERTIES -->
+<!--
+  <xsd:element name="HsmMonUrl" type="xsd:string"/>
+
+  <xsd:element name="HsmSimEstResourceProperties">
+  <xsd:complexType>
+    <xsd:sequence>
+      <xsd:element ref="tns:HsmMonUrl" minOccurs="1" maxOccurs="1"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  </xsd:element>
+-->
+
+  </types>
+
+
+  <!--============================================================
+
+                       M E S S A G E S
+
+  ============================================================-->
+  <message name="EstimateReadInMsg">
+    <part name="fileName" element="tns:fileName"/>
+  </message>
+
+  <message name="EstimateReadOutMsg">
+    <part name="estimation" element="tns:Estimation"/>
+  </message>
+
+
+
+  <!--============================================================
+
+                       P O R T T Y P E
+
+  ============================================================-->
+  <portType name="HSMRuleEstPortType"
+            wsdlpp:extends="wsrpw:GetResourceProperty">
+
+
+    <operation name="estimateRead">
+      <input message="tns:EstimateReadInMsg"/>
+      <output message="tns:EstimateReadOutMsg"/>
+    </operation>
+
+  </portType>
+
+
+</definitions>
+

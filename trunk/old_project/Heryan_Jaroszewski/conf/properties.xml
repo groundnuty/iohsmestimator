@@ -1,0 +1,12 @@
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>
+Average positioning time - average time of positioning tape in drive [second]
+Load tape latency - average time of inserting tape to drive [second]
+Cached latency - average latency time before starting downloading file [second]
+</comment>
+<entry key="Positioning latency">60</entry>
+<entry key="Load tape latency">10</entry>
+<entry key="Unload tape latency">10</entry>
+<entry key="Cached latency">1</entry>
+</properties>

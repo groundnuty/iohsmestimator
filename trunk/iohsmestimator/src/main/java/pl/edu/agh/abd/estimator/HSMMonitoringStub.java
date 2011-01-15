@@ -1,51 +1,102 @@
 package pl.edu.agh.abd.estimator;
 
+
+
+import javax.ws.rs.core.MultivaluedMap;
+
+import com.google.gson.Gson;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.client.apache.ApacheHttpClient;
+import com.sun.jersey.client.apache.config.DefaultApacheHttpClientConfig;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
+
+import pl.edu.agh.abd.ConfigProperties;
 import pl.edu.agh.abd.estimator.mocks.HSMFileInfo;
+import static pl.edu.agh.abd.ConfigProperties.*;
 
 /**
  * created at: Jan 15, 2011, 8:06:23 AM
  *
  * @author: Michal Orzechowski
  */
-public class HSMMonitoringStub {
+public class HSMMonitoringStub{
+	Gson transformer;
+	Client client;
+	ConfigProperties prop;
+	
+	private float cachedLatency;
+	private float positioningLatency;
+	private float loadTapeLatency;
+	private float unloadTapeLatency;
+	private HSMFileInfo[] filesInAQueue;
+	private float systemTransferRate;
+	
+	@SuppressWarnings("static-access")
+	public HSMMonitoringStub(){
+		transformer = new Gson();
+		DefaultApacheHttpClientConfig config = new DefaultApacheHttpClientConfig();
+		config.getProperties().put(config.PROPERTY_HANDLE_COOKIES, Boolean.TRUE);
+		client = ApacheHttpClient.create(config);
+		prop = ConfigProperties.getProperties();
+		
+		cachedLatency = transformer.fromJson(getFromServer(prop.getProperty(CACHED_LATENCY_URL), 0), Float.class);
+		positioningLatency = transformer.fromJson(getFromServer(prop.getProperty(POSITIONING_LATENCY_URL), 0), Float.class);
+		loadTapeLatency = transformer.fromJson(getFromServer(prop.getProperty(LOAD_TAPE_LATENCY_URL), 0), Float.class);
+		unloadTapeLatency = transformer.fromJson(getFromServer(prop.getProperty(UNLOAD_TAPE_LATENCY_URL), 0), Float.class);
+		systemTransferRate = transformer.fromJson(getFromServer(prop.getProperty(SYSTEM_TRANSFER_RATE_URL), 0), Float.class);;
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public String getFromServer(String url, Integer HSMID){
+		WebResource webRes = client.resource(url);
+		MultivaluedMap queryParams = new MultivaluedMapImpl();
+		queryParams.add("id", HSMID.toString());
+		return (String) webRes.queryParams(queryParams).get(String.class);
+	}
+	
     public HSMFileInfo getHSMFileInfo(String fileName) {
-        return new HSMFileInfo("1",10012,12,false,"tape",false);
+    	return new HSMFileInfo("1",10012,12,false,"tape",false);
+    	/*if(null == filesInAQueue) getFilesInAQueue();
+    	if(null == filesInAQueue || 0 == filesInAQueue.length) return null;
+    	return filesInAQueue[0];*/
     }
     
     public float getSystemTransferRate() {
-        return 100;
+        return systemTransferRate;
     }
 
     public int getFileQueueSize() {
-        return 2;
+    	if(null == filesInAQueue) getFilesInAQueue();
+    	if(null == filesInAQueue || 0 == filesInAQueue.length) return 0;
+        return filesInAQueue.length;
     }
 
     public HSMFileInfo[] getFilesInAQueue() {
-        return new HSMFileInfo[] {
-                new HSMFileInfo("2",10012,12,true,"tape",false),
-                new HSMFileInfo("3",10012,12,false,"tape",true)
-        };
+    	filesInAQueue = transformer.fromJson(getFromServer(prop.getProperty(FILES_IN_QUEUE_URL), 0), HSMFileInfo[].class);
+    	return filesInAQueue;
     }
 
     public boolean areThereAnyEmptyDrives() {
-        return false ;
+        
+    	return transformer.fromJson(getFromServer(prop.getProperty(ANY_EMPTY_DRIVES_URL), 0), Boolean.class);
     }
 
 
     public float getCachedLatency() {
-        return 1;  //To change body of created methods use File | Settings | File Templates.
+        return cachedLatency;
     }
 
 
     public float getPositioningLatency() {
-        return 60;  //To change body of created methods use File | Settings | File Templates.
+        return positioningLatency;
     }
 
-    public int getLoadTapeLatency() {
-        return 10;  //To change body of created methods use File | Settings | File Templates.
+    public float getLoadTapeLatency() {
+        return loadTapeLatency;
     }
 
     public float getUnloadTapeLatency() {
-        return 10;  //To change body of created methods use File | Settings | File Templates.
+        return unloadTapeLatency;
     }
 }

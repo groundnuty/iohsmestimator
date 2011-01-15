@@ -13,17 +13,8 @@ int startBlock ;
     boolean isCached ;
     String mediaType ;
     boolean isTapeWithFileInDrive ;
-
-    HSMFileInfo(String someResponseThatNeedToBeParsed) {
-        //here we ona parse the response and assign class variables
-        tapeID = "1" ;
-        startBlock = 12 ;
-        endBlock = 10012 ;
-        isCached = false ;
-        mediaType = "tape" ;
-        isTapeWithFileInDrive = false ;
-    }
-
+    
+    public HSMFileInfo(){}
     /*
         Constructor for dev purposes only!
      */

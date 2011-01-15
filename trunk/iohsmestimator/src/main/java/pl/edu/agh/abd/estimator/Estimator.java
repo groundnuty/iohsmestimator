@@ -74,7 +74,7 @@ public class Estimator {
 			HSMFileInfo prevTape = null;
 			HSMFileInfo[] fileQueue = monitoringDevice.getFilesInAQueue();
 			for (int i=0; i<fileQueue.length; i++){
-				if (fileQueue[i].getMediaType() == fileInfo.getMediaType() ){
+				if (fileQueue[i].getMediaType().equals(fileInfo.getMediaType())){
 					HSMFileInfo currentFile = fileQueue[i];
 					totalFilesSize += (currentFile.getEndBlock() - currentFile.getStartBlock());// * currentTape.getBlockSize() ;
 					totalTapePositionings++;

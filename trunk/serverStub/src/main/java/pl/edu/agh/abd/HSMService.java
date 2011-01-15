@@ -7,6 +7,8 @@ import javax.ws.rs.core.MediaType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import pl.edu.agh.abd.estimator.mocks.HSMFileInfo;
 import static pl.edu.agh.abd.HSMProperties.*;
 
 @Path("/hsm")
@@ -16,36 +18,63 @@ public class HSMService {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("positioningLatency")
-	public int getPositioningLatency(@QueryParam("id") int hsmId){
+	public float getPositioningLatency(@QueryParam("id") int hsmId){
 		LOGGER.debug("returning positioning latency for: " + hsmId);
 		String latency = getProperties().getProperty(POSITIONING_LATENCY);
-		return Integer.parseInt(latency);
+		return Float.parseFloat(latency);
 	}
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("loadTapeLatency")
-	public int getLoadTapeLatency(@QueryParam("id") int hsmId){
+	public float getLoadTapeLatency(@QueryParam("id") int hsmId){
 		LOGGER.debug("returning load tape latency for: " + hsmId);
 		String latency = getProperties().getProperty(LOAD_TAPE_LATENCY);
-		return Integer.parseInt(latency);
+		return Float.parseFloat(latency);
 	}
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("unloadTapeLatency")
-	public int getUnloadTapeLatency(@QueryParam("id") int hsmId){
+	public float getUnloadTapeLatency(@QueryParam("id") int hsmId){
 		LOGGER.debug("returning unload tape latency for: " + hsmId);
 		String latency = getProperties().getProperty(UNLOAD_TAPE_LATENCY);
-		return Integer.parseInt(latency);
+		return Float.parseFloat(latency);
 	}
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("cachedLatency")
-	public int getLatency(@QueryParam("id") int hsmId){
+	public float getLatency(@QueryParam("id") int hsmId){
 		LOGGER.debug("returning cached latency for: " + hsmId);
 		String latency = getProperties().getProperty(CACHED_LATENCY);
-		return Integer.parseInt(latency);
+		return Float.parseFloat(latency);
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("filesInQueue")
+	public HSMFileInfo[] getFilesInQueue(@QueryParam("id") int hsmId){
+		LOGGER.debug("returning files in queue for: " + hsmId);
+		return new HSMFileInfo[] {
+                new HSMFileInfo("2",10012,12,true,"tape",false),
+                new HSMFileInfo("3",10012,12,false,"tape",true)
+        };
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("systemTransferRate")
+	public float getSystemTransferRate(@QueryParam("id") int hsmId){
+		LOGGER.debug("returning system transfer rate for: " + hsmId);
+		return 100.0F;
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("emptyDrive")
+	public boolean isAnyEmptyDrive(@QueryParam("id") int hsmId){
+		LOGGER.debug("returning any empty drive for: " + hsmId);
+		return false;
 	}
 }

@@ -6,13 +6,39 @@ package pl.edu.agh.abd.estimator.mocks;
  * @author: Michal Orzechowski
  */
 public class HSMFileInfo {
-    private int endBlock;
-    private int startBlock;
 
-    public String getTapeID() {
-        return null;  //To change body of created methods use File | Settings | File Templates.
+    String tapeID ;
+    int endBlock ;
+int startBlock ;
+    boolean isCached ;
+    String mediaType ;
+    boolean isTapeWithFileInDrive ;
+
+    HSMFileInfo(String someResponseThatNeedToBeParsed) {
+        //here we ona parse the response and assign class variables
+        tapeID = "1" ;
+        startBlock = 12 ;
+        endBlock = 10012 ;
+        isCached = false ;
+        mediaType = "tape" ;
+        isTapeWithFileInDrive = false ;
     }
 
+    /*
+        Constructor for dev purposes only!
+     */
+    public HSMFileInfo(String tapeID, int endBlock, int startBlock, boolean cached, String mediaType, boolean tapeWithFileInDrive) {
+            this.tapeID = tapeID;
+            this.endBlock = endBlock;
+            this.startBlock = startBlock;
+            isCached = cached;
+            this.mediaType = mediaType;
+            isTapeWithFileInDrive = tapeWithFileInDrive;
+    }
+
+    public String getTapeID() {
+        return tapeID ;  //To change body of created methods use File | Settings | File Templates.
+    }
 
     public int getEndBlock() {
         return endBlock;
@@ -23,6 +49,14 @@ public class HSMFileInfo {
     }
 
     public boolean isIsCached() {
-        return false;  //To change body of created methods use File | Settings | File Templates.
+        return isCached;  //To change body of created methods use File | Settings | File Templates.
+    }
+
+    public String getMediaType() {
+        return mediaType ;  //To change body of created methods use File | Settings | File Templates.
+    }
+
+    public boolean isTapeWithFileInDrive() {
+        return isTapeWithFileInDrive ;
     }
 }

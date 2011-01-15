@@ -1,0 +1,4 @@
+mvn clean install
+mvn -Djetty.port=8080 jetty:run-war
+
+then go to http://localhost:8080/

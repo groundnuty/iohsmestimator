@@ -19,6 +19,7 @@ public class ConfigProperties extends Properties {
 	public static String FILES_IN_QUEUE_URL = "filesInQueueUrl";
 	public static String SYSTEM_TRANSFER_RATE_URL = "systemTransferRateUrl";
 	public static String ANY_EMPTY_DRIVES_URL = "anyEmptyDrivesUrl";
+	public static String FILE_INFO_URL = "fileInfoUrl";
 	
 	
 	private static ConfigProperties INSTANCE;

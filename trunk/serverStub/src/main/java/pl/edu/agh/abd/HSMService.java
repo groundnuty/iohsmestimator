@@ -77,4 +77,12 @@ public class HSMService {
 		LOGGER.debug("returning any empty drive for: " + hsmId);
 		return false;
 	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("fileInfo")
+	public HSMFileInfo getHSMFileInfo(@QueryParam("id") int hsmId, @QueryParam("name") String name){
+		LOGGER.debug("returning file info(" + name + ") for: " + hsmId);
+		return new HSMFileInfo("1",10012,12,false,"tape",false);
+	}
 }

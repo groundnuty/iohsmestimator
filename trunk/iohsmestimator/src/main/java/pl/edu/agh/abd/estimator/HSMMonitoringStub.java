@@ -55,11 +55,10 @@ public class HSMMonitoringStub{
 		return (String) webRes.queryParams(queryParams).get(String.class);
 	}
 	
+	
     public HSMFileInfo getHSMFileInfo(String fileName) {
-    	return new HSMFileInfo("1",10012,12,false,"tape",false);
-    	/*if(null == filesInAQueue) getFilesInAQueue();
-    	if(null == filesInAQueue || 0 == filesInAQueue.length) return null;
-    	return filesInAQueue[0];*/
+    	//we don't need fileName
+    	return transformer.fromJson(getFromServer(prop.getProperty(FILE_INFO_URL), 0), HSMFileInfo.class);
     }
     
     public float getSystemTransferRate() {

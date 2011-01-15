@@ -6,7 +6,14 @@ package pl.edu.agh.abd.estimator.mocks;
  * @author: Michal Orzechowski
  */
 public class Estimation {
+    public final float bandwidth ;
+    public final float latency ;
+    public final int fileSize ;
+
     public Estimation(float bandwidth, float latency, int fileSize) {
-        //To change body of created methods use File | Settings | File Templates.
+        this.bandwidth = bandwidth;
+        this.latency = latency;
+        this.fileSize = fileSize;
     }
+
 }

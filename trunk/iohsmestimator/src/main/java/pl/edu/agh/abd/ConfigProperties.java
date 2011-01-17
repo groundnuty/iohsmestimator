@@ -20,6 +20,7 @@ public class ConfigProperties extends Properties {
 	public static String SYSTEM_TRANSFER_RATE_URL = "systemTransferRateUrl";
 	public static String ANY_EMPTY_DRIVES_URL = "anyEmptyDrivesUrl";
 	public static String FILE_INFO_URL = "fileInfoUrl";
+	public static String BLOCK_SIZE_URL = "blockSizeUrl";
 	
 	
 	private static ConfigProperties INSTANCE;

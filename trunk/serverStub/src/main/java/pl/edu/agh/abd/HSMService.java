@@ -85,4 +85,27 @@ public class HSMService {
 		LOGGER.debug("returning file info(" + name + ") for: " + hsmId);
 		return new HSMFileInfo("1",10012,12,false,"tape",false);
 	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("blockSize")
+	public String getBlockSizeOnTape(@QueryParam("id") int hsmId, @QueryParam("tapeId") int tapeId){
+		LOGGER.debug("returning block size on tape: " + tapeId);
+		String result;
+		switch (tapeId) {
+		case 1:
+			result = "2 KB";
+			break;
+		case 2:
+			result = "4 KB";
+			break;
+		case 3:
+			result = "1 KB";
+
+		default:
+			result = "512 B";
+			break;
+		}
+		return result;
+	}
 }

@@ -30,6 +30,7 @@ public class Estimator {
         float blockBandwidth = 0;
 
 		HSMFileInfo fileInfo = monitoringDevice.getHSMFileInfo(fileName);
+		String blockSize = monitoringDevice.getBlockSize(Integer.parseInt(fileInfo.getTapeID()));
 		
 		//Calculating file size
 		fileSize = (fileInfo.getEndBlock()-fileInfo.getStartBlock()); //*tapeWithFile.getBlockSize(); // file size = (endBlock-startBlock)*BlockSize;
@@ -41,21 +42,21 @@ public class Estimator {
 		//If file is cached latency = fileSize/bandwidth + cached latency
 		if (fileInfo.isIsCached()){
 			latency = fileSize/blockBandwidth + monitoringDevice.getCachedLatency();
-			estimatedValues = new Estimation(bandwidth, latency, fileSize);
+			estimatedValues = new Estimation(bandwidth, latency, fileSize, fileName, blockSize);
 			return estimatedValues;
 		}
 
 		//If file is not cached and tape is not in drive and empty driver of same type as tape exists
 		if (monitoringDevice.areThereAnyEmptyDrives() &&!fileInfo.isTapeWithFileInDrive()){
 			latency = fileSize/blockBandwidth + monitoringDevice.getPositioningLatency()+monitoringDevice.getLoadTapeLatency();
-			estimatedValues = new Estimation(bandwidth, latency, fileSize);
+			estimatedValues = new Estimation(bandwidth, latency, fileSize, fileName, blockSize);
 			return estimatedValues;
 		}
 
 		//If file is not cached and tape is in drive, and there are no files in queue
 		if (fileInfo.isTapeWithFileInDrive() && monitoringDevice.getFileQueueSize()==0){
 			latency = fileSize/blockBandwidth + monitoringDevice.getPositioningLatency();
-			estimatedValues= new Estimation(bandwidth, latency, fileSize);
+			estimatedValues= new Estimation(bandwidth, latency, fileSize, fileName, blockSize);
 			return estimatedValues;
 		}
 
@@ -91,7 +92,7 @@ public class Estimator {
 			latency = fileSize/blockBandwidth+totalFilesSize/blockBandwidth+totalTapeChanges*monitoringDevice.getLoadTapeLatency() +totalTapePositionings*monitoringDevice.getPositioningLatency();
 		}
 
-                estimatedValues = new Estimation(bandwidth, latency, fileSize);
+                estimatedValues = new Estimation(bandwidth, latency, fileSize, fileName, blockSize);
                 return estimatedValues;
 	}
 

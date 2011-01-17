@@ -44,7 +44,15 @@ public class HSMMonitoringStub{
 		positioningLatency = transformer.fromJson(getFromServer(prop.getProperty(POSITIONING_LATENCY_URL), 0), Float.class);
 		loadTapeLatency = transformer.fromJson(getFromServer(prop.getProperty(LOAD_TAPE_LATENCY_URL), 0), Float.class);
 		unloadTapeLatency = transformer.fromJson(getFromServer(prop.getProperty(UNLOAD_TAPE_LATENCY_URL), 0), Float.class);
-		systemTransferRate = transformer.fromJson(getFromServer(prop.getProperty(SYSTEM_TRANSFER_RATE_URL), 0), Float.class);;
+		systemTransferRate = transformer.fromJson(getFromServer(prop.getProperty(SYSTEM_TRANSFER_RATE_URL), 0), Float.class);
+	}
+	
+	public String getFromServerBlockSize(Integer HSMID, Integer tapeId){
+		WebResource webRes = client.resource(prop.getProperty(BLOCK_SIZE_URL));
+		MultivaluedMap queryParams = new MultivaluedMapImpl();
+		queryParams.add("id", HSMID.toString());
+		queryParams.add("tapeId", tapeId.toString());
+		return (String) webRes.queryParams(queryParams).get(String.class);
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -98,4 +106,8 @@ public class HSMMonitoringStub{
     public float getUnloadTapeLatency() {
         return unloadTapeLatency;
     }
+    
+	public String getBlockSize(int tapeId) {
+		return transformer.fromJson(getFromServerBlockSize(0, tapeId), String.class);
+	}
 }

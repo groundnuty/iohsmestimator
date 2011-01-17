@@ -6,22 +6,22 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import pl.edu.agh.abd.EstimateUtil;
+import pl.edu.agh.abd.estimator.Estimator;
+import pl.edu.agh.abd.estimator.HSMMonitoringStub;
+import pl.edu.agh.abd.estimator.mocks.Estimation;
 
 @Path("/estimate")
 public class EstimationService {
 	
-	private EstimateUtil estimateUtil;
-	
-	public EstimationService(){
-		estimateUtil = EstimateUtil.getInstance();
-	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("get")
-	public int getEstimate(@QueryParam("path") String path){
-		estimateUtil.setValue(32);
-		return estimateUtil.getValue();
+	public Estimation getEstimate(@QueryParam("path") String path){
+		HSMMonitoringStub hsmMonitoringStub = new HSMMonitoringStub() ;
+        Estimator estimator = new Estimator(hsmMonitoringStub) ;
+        Estimation estimation  = estimator.estimate(path);
+        
+        return estimation;
 	}
 }

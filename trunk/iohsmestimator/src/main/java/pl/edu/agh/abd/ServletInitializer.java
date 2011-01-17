@@ -22,11 +22,6 @@ public class ServletInitializer implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
 		LOGGER.info("initializing servlet");
-		EstimateUtil es = EstimateUtil.getInstance();
-		
-		Properties props = ConfigProperties.getProperties();
-		Timer timer = new Timer();
-		timer.schedule(es, 500, Long.parseLong(props.getProperty(ESTIMATE_INTERVAL)) * 1000);
 	}
 
 }

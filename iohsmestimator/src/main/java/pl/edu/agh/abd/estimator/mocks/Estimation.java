@@ -6,14 +6,18 @@ package pl.edu.agh.abd.estimator.mocks;
  * @author: Michal Orzechowski
  */
 public class Estimation {
+	public String path;
     public final float bandwidth ;
     public final float latency ;
     public final int fileSize ;
+    public final String blockSize;
 
-    public Estimation(float bandwidth, float latency, int fileSize) {
+    public Estimation(float bandwidth, float latency, int fileSize, String path, String blockSize) {
         this.bandwidth = bandwidth;
         this.latency = latency;
         this.fileSize = fileSize;
+        this.path=path;
+        this.blockSize = blockSize;
     }
 
 }

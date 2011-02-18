@@ -1,14 +1,16 @@
 package pl.edu.agh.abd;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 
 
 public class ConfigProperties extends Properties {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static String KEY1 = "key1";
 	public static String ESTIMATE_INTERVAL = "estimateInterval";
 	public static String SERVER_URL = "serverUrl";
@@ -21,6 +23,8 @@ public class ConfigProperties extends Properties {
 	public static String ANY_EMPTY_DRIVES_URL = "anyEmptyDrivesUrl";
 	public static String FILE_INFO_URL = "fileInfoUrl";
 	public static String BLOCK_SIZE_URL = "blockSizeUrl";
+	
+	public static String HSM_FILE_URL = "hsmFileURL"; 
 	
 	
 	private static ConfigProperties INSTANCE;

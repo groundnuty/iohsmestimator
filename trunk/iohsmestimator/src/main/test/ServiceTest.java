@@ -5,13 +5,13 @@ import com.google.gson.Gson;
 
 import pl.edu.agh.abd.estimator.HSMMonitoringStub;
 import pl.edu.agh.abd.estimator.mocks.HSMFileInfo;
+import pl.edu.agh.storage.estimation.hsmclient.HSM;
 import pl.edu.agh.storage.estimation.hsmclient.HSMFile;
 import pl.edu.agh.storage.estimation.hsmclient.HSMFileWrapper;
 
 
 public class ServiceTest  extends TestCase{
 
-	private static final boolean FILE_TAPE_IN_DRIVE = false;
 	private static final String FILE_MEDIA_TYPE = "tape";
 	private static final String FILE_IS_CACHED = "false";
 	private static final int FILE_START_BLOCK = 12;
@@ -80,6 +80,14 @@ public class ServiceTest  extends TestCase{
 	}
 	
 	@Test
+	public void testGetHSMInfo(){
+		HSMMonitoringStub stub = new HSMMonitoringStub();
+		HSM hsm = stub.getHSMInfo();
+		
+	}
+	
+	/************************************************** old tests ************************************************/
+	@Test
 	public void testFilesInQueue(){
 		HSMMonitoringStub stub = new HSMMonitoringStub();
 		HSMFileInfo[] files = stub.getFilesInAQueue();
@@ -106,20 +114,6 @@ public class ServiceTest  extends TestCase{
 		assertEquals(SECOND_IS_CACHED, file.isIsCached());
 		assertEquals(SECOND_MEDIA_TYPE, file.getMediaType());
 		assertEquals(SECOND_IS_TYPE_WITH_FILE_IN_DRIVE, file.isTapeWithFileInDrive());
-	}
-	
-	@Test
-	public void testGetFileInfo(){
-		HSMMonitoringStub stub = new HSMMonitoringStub();
-		
-		HSMFileInfo file = stub.getHSMFileInfo(FILE_NAME);
-
-		assertEquals(FILE_TAPE_ID, file.getTapeID());
-		assertEquals(FILE_END_BLOCK, file.getEndBlock());
-		assertEquals(FILE_START_BLOCK, file.getStartBlock());
-		assertEquals(FILE_IS_CACHED, file.isIsCached());
-		assertEquals(FILE_MEDIA_TYPE, file.getMediaType());
-		assertEquals(FILE_TAPE_IN_DRIVE, file.isTapeWithFileInDrive());
 	}
 	
 	@Test

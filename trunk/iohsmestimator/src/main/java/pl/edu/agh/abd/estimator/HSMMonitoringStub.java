@@ -13,8 +13,10 @@ import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 import pl.edu.agh.abd.ConfigProperties;
 import pl.edu.agh.abd.estimator.mocks.HSMFileInfo;
+import pl.edu.agh.storage.estimation.hsmclient.HSM;
 import pl.edu.agh.storage.estimation.hsmclient.HSMFile;
 import pl.edu.agh.storage.estimation.hsmclient.HSMFileWrapper;
+import pl.edu.agh.storage.estimation.hsmclient.HSMWrapper;
 import static pl.edu.agh.abd.ConfigProperties.*;
 
 /**
@@ -33,6 +35,7 @@ public class HSMMonitoringStub{
 	private float unloadTapeLatency;
 	private HSMFileInfo[] filesInAQueue;
 	private float systemTransferRate;
+	private HSM hsm;
 	
 	@SuppressWarnings("static-access")
 	public HSMMonitoringStub(){
@@ -41,29 +44,14 @@ public class HSMMonitoringStub{
 		config.getProperties().put(config.PROPERTY_HANDLE_COOKIES, Boolean.TRUE);
 		client = ApacheHttpClient.create(config);
 		prop = ConfigProperties.getProperties();
+		hsm = getHSMInfo();
 		
-		cachedLatency = transformer.fromJson(getFromServer(prop.getProperty(CACHED_LATENCY_URL), 0), Float.class);
-		positioningLatency = transformer.fromJson(getFromServer(prop.getProperty(POSITIONING_LATENCY_URL), 0), Float.class);
-		loadTapeLatency = transformer.fromJson(getFromServer(prop.getProperty(LOAD_TAPE_LATENCY_URL), 0), Float.class);
-		unloadTapeLatency = transformer.fromJson(getFromServer(prop.getProperty(UNLOAD_TAPE_LATENCY_URL), 0), Float.class);
-		systemTransferRate = transformer.fromJson(getFromServer(prop.getProperty(SYSTEM_TRANSFER_RATE_URL), 0), Float.class);
-	}
-	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public String getFromServerBlockSize(Integer HSMID, Integer tapeId){
-		WebResource webRes = client.resource(prop.getProperty(BLOCK_SIZE_URL));
-		MultivaluedMap queryParams = new MultivaluedMapImpl();
-		queryParams.add("id", HSMID.toString());
-		queryParams.add("tapeId", tapeId.toString());
-		return (String) webRes.queryParams(queryParams).get(String.class);
-	}
-	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public String getFromServer(String url, Integer HSMID){
-		WebResource webRes = client.resource(url);
-		MultivaluedMap queryParams = new MultivaluedMapImpl();
-		queryParams.add("id", HSMID.toString());
-		return (String) webRes.queryParams(queryParams).get(String.class);
+		//TODO !!!!!
+		//cachedLatency = transformer.fromJson(getFromServer(prop.getProperty(CACHED_LATENCY_URL), 0), Float.class);
+		//positioningLatency = transformer.fromJson(getFromServer(prop.getProperty(POSITIONING_LATENCY_URL), 0), Float.class);
+		//loadTapeLatency = transformer.fromJson(getFromServer(prop.getProperty(LOAD_TAPE_LATENCY_URL), 0), Float.class);
+		//unloadTapeLatency = transformer.fromJson(getFromServer(prop.getProperty(UNLOAD_TAPE_LATENCY_URL), 0), Float.class);
+		//systemTransferRate = transformer.fromJson(getFromServer(prop.getProperty(SYSTEM_TRANSFER_RATE_URL), 0), Float.class);
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -73,6 +61,13 @@ public class HSMMonitoringStub{
 		queryParams.add("filename", fileName);
 		String restResult = (String) webRes.queryParams(queryParams).get(String.class);
 		return transformer.fromJson(restResult, HSMFileWrapper.class).hsmFile;
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public HSM getHSMInfo() {
+		WebResource webRes = client.resource(prop.getProperty(HSM_URL));
+		MultivaluedMap queryParams = new MultivaluedMapImpl();
+		return transformer.fromJson(webRes.queryParams(queryParams).get(String.class), HSMWrapper.class).hsm;
 	}
 	
     public float getSystemTransferRate() {
@@ -85,14 +80,16 @@ public class HSMMonitoringStub{
         return filesInAQueue.length;
     }
 
+    //TODO
     public HSMFileInfo[] getFilesInAQueue() {
-    	filesInAQueue = transformer.fromJson(getFromServer(prop.getProperty(FILES_IN_QUEUE_URL), 0), HSMFileInfo[].class);
+    	//filesInAQueue = transformer.fromJson(getFromServer(prop.getProperty(FILES_IN_QUEUE_URL), 0), HSMFileInfo[].class);
     	return filesInAQueue;
     }
 
+    //TODO
     public boolean areThereAnyEmptyDrives() {
-        
-    	return transformer.fromJson(getFromServer(prop.getProperty(ANY_EMPTY_DRIVES_URL), 0), Boolean.class);
+    	//return transformer.fromJson(getFromServer(prop.getProperty(ANY_EMPTY_DRIVES_URL), 0), Boolean.class);
+    	return false;
     }
 
 
@@ -113,7 +110,8 @@ public class HSMMonitoringStub{
         return unloadTapeLatency;
     }
     
+    //TODO
 	public String getBlockSize(int tapeId) {
-		return transformer.fromJson(getFromServerBlockSize(0, tapeId), String.class);
+		return "0";
 	}
 }

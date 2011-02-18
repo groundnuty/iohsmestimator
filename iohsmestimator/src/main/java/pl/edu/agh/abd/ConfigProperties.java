@@ -7,11 +7,8 @@ import java.util.Properties;
 
 public class ConfigProperties extends Properties {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	public static String KEY1 = "key1";
+	
 	public static String ESTIMATE_INTERVAL = "estimateInterval";
 	public static String SERVER_URL = "serverUrl";
 	public static String CACHED_LATENCY_URL = "cachedLatencyUrl";
@@ -25,6 +22,7 @@ public class ConfigProperties extends Properties {
 	public static String BLOCK_SIZE_URL = "blockSizeUrl";
 	
 	public static String HSM_FILE_URL = "hsmFileURL"; 
+	public static String HSM_URL = "hsmURL";
 	
 	
 	private static ConfigProperties INSTANCE;

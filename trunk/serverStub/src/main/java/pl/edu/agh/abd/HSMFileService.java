@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.edu.agh.storage.estimation.hsmclient.HSMFileWrapper;
 
-@Path("/hsmfile")
+@Path("sensor/hsmfile")
 public class HSMFileService {
 	Logger LOGGER = LoggerFactory.getLogger(HSMFileService.class);
 

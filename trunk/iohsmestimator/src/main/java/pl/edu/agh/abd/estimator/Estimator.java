@@ -1,6 +1,7 @@
 package pl.edu.agh.abd.estimator;
 
 import pl.edu.agh.abd.estimator.mocks.*;
+import pl.edu.agh.storage.estimation.hsmclient.HSMFile;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,11 +26,11 @@ public class Estimator {
 
 		float latency = 0;
 		float bandwidth = 0;
-		int fileSize = 0;
+		long fileSize = 0;
 
         float blockBandwidth = 0;
 
-		HSMFileInfo fileInfo = monitoringDevice.getHSMFileInfo(fileName);
+		HSMFile fileInfo = monitoringDevice.getHSMFile(fileName);
 		String blockSize = monitoringDevice.getBlockSize(Integer.parseInt(fileInfo.getTapeID()));
 		
 		//Calculating file size
@@ -40,7 +41,7 @@ public class Estimator {
                 blockBandwidth = bandwidth * 1024.0f * 1024.0f;// / tapeWithFile.getBlockSize();
 
 		//If file is cached latency = fileSize/bandwidth + cached latency
-		if (fileInfo.isIsCached()){
+		if (fileInfo.isFileCached()){
 			latency = fileSize/blockBandwidth + monitoringDevice.getCachedLatency();
 			estimatedValues = new Estimation(bandwidth, latency, fileSize, fileName, blockSize);
 			return estimatedValues;
@@ -62,7 +63,7 @@ public class Estimator {
 
 		//If file is not cached and tape is not in drive, and empty driver doesn't exists, but there is drive with tape which is not in use
 
-		if(!fileInfo.isIsCached() && !monitoringDevice.areThereAnyEmptyDrives() && monitoringDevice.getFileQueueSize()==0) {
+		if(!fileInfo.isFileCached() && !monitoringDevice.areThereAnyEmptyDrives() && monitoringDevice.getFileQueueSize()==0) {
 			latency = fileSize/blockBandwidth + monitoringDevice.getUnloadTapeLatency() + monitoringDevice.getPositioningLatency() + monitoringDevice.getLoadTapeLatency();;
 		}
 

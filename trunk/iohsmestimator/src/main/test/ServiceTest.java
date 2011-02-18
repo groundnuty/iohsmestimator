@@ -1,15 +1,19 @@
 import junit.framework.TestCase;
 import org.junit.Test;
 
+import com.google.gson.Gson;
+
 import pl.edu.agh.abd.estimator.HSMMonitoringStub;
 import pl.edu.agh.abd.estimator.mocks.HSMFileInfo;
+import pl.edu.agh.storage.estimation.hsmclient.HSMFile;
+import pl.edu.agh.storage.estimation.hsmclient.HSMFileWrapper;
 
 
 public class ServiceTest  extends TestCase{
 
 	private static final boolean FILE_TAPE_IN_DRIVE = false;
 	private static final String FILE_MEDIA_TYPE = "tape";
-	private static final boolean FILE_IS_CACHED = false;
+	private static final String FILE_IS_CACHED = "false";
 	private static final int FILE_START_BLOCK = 12;
 	private static final int FILE_END_BLOCK = 10012;
 	private static final String FILE_TAPE_ID = "1";
@@ -36,6 +40,8 @@ public class ServiceTest  extends TestCase{
 	private static final int FIRST_START_BLOCK = 12;
 	private static final int FIRST_END_BLOCK = 10012;
 	private static final String FIRST_TYPE_ID = "2";
+	
+	Gson transformer = new Gson();
 
 	@Test
 	public void testHSMMonitoringStubCreation(){
@@ -49,6 +55,29 @@ public class ServiceTest  extends TestCase{
 		assertEquals(HSM_SYSTEM_TRANSFER_RATE, stub.getSystemTransferRate(), 0.0001);
 	}
 	
+	@Test
+	public void testTransformHSMFile(){
+		String test = "{\"hsmFile\":{\"endBlock\":684837,\"fileSize\":142346240,\"filename\":\"\\/fse\\/other\\/monit\\/t\",\"isCached\":true,\"startBlock\":684294,\"tapeID\":\"GS6086L3\"}}";
+		HSMFile file = transformer.fromJson(test, HSMFileWrapper.class).hsmFile;
+		assertEquals("/fse/other/monit/t", file.getFilename());
+		assertEquals("true", file.isIsCached());
+		assertEquals(684837, file.getEndBlock());
+		assertEquals(142346240, file.getFileSize());
+		assertEquals(684294, file.getStartBlock());
+		assertEquals("GS6086L3", file.getTapeID());
+	}
+	
+	@Test
+	public void testGetHSMFile(){
+		HSMMonitoringStub stub = new HSMMonitoringStub();
+		HSMFile file = stub.getHSMFile(FILE_NAME);
+		
+		assertEquals(FILE_NAME, file.getFilename());
+		assertEquals(FILE_TAPE_ID, file.getTapeID());
+		assertEquals(FILE_END_BLOCK, file.getEndBlock());
+		assertEquals(FILE_START_BLOCK, file.getStartBlock());
+		assertEquals(FILE_IS_CACHED, file.isIsCached());
+	}
 	
 	@Test
 	public void testFilesInQueue(){

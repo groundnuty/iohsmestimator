@@ -13,6 +13,8 @@ import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 import pl.edu.agh.abd.ConfigProperties;
 import pl.edu.agh.abd.estimator.mocks.HSMFileInfo;
+import pl.edu.agh.storage.estimation.hsmclient.HSMFile;
+import pl.edu.agh.storage.estimation.hsmclient.HSMFileWrapper;
 import static pl.edu.agh.abd.ConfigProperties.*;
 
 /**
@@ -47,6 +49,7 @@ public class HSMMonitoringStub{
 		systemTransferRate = transformer.fromJson(getFromServer(prop.getProperty(SYSTEM_TRANSFER_RATE_URL), 0), Float.class);
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String getFromServerBlockSize(Integer HSMID, Integer tapeId){
 		WebResource webRes = client.resource(prop.getProperty(BLOCK_SIZE_URL));
 		MultivaluedMap queryParams = new MultivaluedMapImpl();
@@ -63,12 +66,15 @@ public class HSMMonitoringStub{
 		return (String) webRes.queryParams(queryParams).get(String.class);
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public HSMFile getHSMFile(String fileName){
+		WebResource webRes = client.resource(prop.getProperty(HSM_FILE_URL));
+		MultivaluedMap queryParams = new MultivaluedMapImpl();
+		queryParams.add("filename", fileName);
+		String restResult = (String) webRes.queryParams(queryParams).get(String.class);
+		return transformer.fromJson(restResult, HSMFileWrapper.class).hsmFile;
+	}
 	
-    public HSMFileInfo getHSMFileInfo(String fileName) {
-    	//we don't need fileName
-    	return transformer.fromJson(getFromServer(prop.getProperty(FILE_INFO_URL), 0), HSMFileInfo.class);
-    }
-    
     public float getSystemTransferRate() {
         return systemTransferRate;
     }

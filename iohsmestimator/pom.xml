@@ -2,37 +2,28 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>iohsmestimator</groupId>
   <artifactId>iohsmestimator</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>war</packaging>
+  <version>1.0-SNAPSHOT</version>
   <name>iohsmestimator</name>
   
   <dependencies>
-  		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-client</artifactId>
-			<version>1.4</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.jersey.contribs</groupId>
-			<artifactId>jersey-apache-client</artifactId>
-			<version>1.4</version>
-		</dependency>
-		  <dependency>
-		    <groupId>javax.servlet</groupId>
-		    <artifactId>servlet-api</artifactId>
-		    <version>2.4</version>
-		    <scope>provided</scope>
-		  </dependency>
-		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-server</artifactId>
-			<version>1.4</version>
-		</dependency>
+
+	    <dependency>
+      <groupId>com.sun.jersey.contribs</groupId>
+      <artifactId>jersey-apache-client</artifactId>
+      <version>1.6-ea01</version>
+      <type>jar</type>
+    </dependency>
+
 		<dependency>
 			<groupId>javax.ws.rs</groupId>
 			<artifactId>jsr311-api</artifactId>
-			<version>1.0</version>
+			 <version>1.1.1</version>
 		</dependency>
+      <dependency>
+          <groupId>org.apache.cxf</groupId>
+          <artifactId>cxf-bundle-jaxrs</artifactId>
+          <version>2.3.1</version>
+        </dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
@@ -79,24 +70,65 @@
 	<build>
 		<plugins>
 			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
+		  <groupId>org.apache.maven.plugins</groupId>
+		  <artifactId>maven-compiler-plugin</artifactId>
+		  <version>2.0.2</version>
+		  <configuration>
+		   <source>1.6</source>
+		   <target>1.6</target>
+		  </configuration>
+		 </plugin>
+            <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<outputDirectory>
+						target/${project.artifactId}-${project.version}-snapshot/${project.artifactId}-${project.version}
+					</outputDirectory>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>lib/</classpathPrefix>
+							<mainClass>
+								pl.edu.agh.abd.estimator.App
+							</mainClass>
+						</manifest>
+						<manifestEntries>
+							<Class-Path>./</Class-Path>
+						</manifestEntries>
+					</archive>
+					<excludes>
+						<exclude>*.properties</exclude>
+						<exclude>*.xml</exclude>
+						<exclude>sigar-*.*</exclude>
+						<exclude>libsigar-*.*</exclude>
+					</excludes>
 				</configuration>
 			</plugin>
-
-            <plugin>
-             <groupId>org.mortbay.jetty</groupId>
-                    <artifactId>maven-jetty-plugin</artifactId>
-                    <version>6.1.10</version>
-                    <configuration>
-                            <scanIntervalSeconds>10</scanIntervalSeconds>
-                            <stopKey>foo</stopKey>
-                            <stopPort>8088</stopPort>
-                            <webApp>${project.build.directory}/${build.finalName}.war</webApp>
-                    </configuration>
-             </plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptors>
+						<descriptor>
+							src/main/assembly/assembly-def.xml
+						</descriptor>
+                                                <!--
+                                                <descriptor>
+                                                    src/main/assembly/jar-with-dependencies.xml
+                                                </descriptor>
+                                                -->
+					</descriptors>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-install-assembly</id>
+						<phase>install</phase>
+						<goals>
+							<goal>assembly</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 	

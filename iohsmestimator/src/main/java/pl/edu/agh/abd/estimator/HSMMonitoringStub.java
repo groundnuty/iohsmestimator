@@ -39,14 +39,17 @@ public class HSMMonitoringStub{
 	private HSM hsm;
 	private Library library;
 	private Drive drive;
-	
+
+    private String hsmId ;
+
 	@SuppressWarnings("static-access")
-	public HSMMonitoringStub(){
+	public HSMMonitoringStub(String hsmId){
 		transformer = new Gson();
 		DefaultApacheHttpClientConfig config = new DefaultApacheHttpClientConfig();
 		config.getProperties().put(config.PROPERTY_HANDLE_COOKIES, Boolean.TRUE);
 		client = ApacheHttpClient.create(config);
 		prop = ConfigProperties.getProperties();
+        this.hsmId = hsmId ;
 		refreshAndInitialize();
 	}
 
@@ -75,10 +78,18 @@ public class HSMMonitoringStub{
 		unloadTapeLatency = drive.getAverageUnloadTime();
 		systemTransferRate = drive.getAverageDriveReadTransferRate();
 	}
-	
+
+    private String getHSMFileUrl(String fileName) {
+        return prop.getProperty(HSM_FILE_URL)+this.hsmId+"/";
+    }
+
+     private String getHSMUrl() {
+        return prop.getProperty(HSM_URL)+this.hsmId+"/";
+    }
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public HSMFile getHSMFile(String fileName){
-		WebResource webRes = client.resource(prop.getProperty(HSM_FILE_URL));
+		WebResource webRes = client.resource(getHSMFileUrl(fileName));
 		MultivaluedMap queryParams = new MultivaluedMapImpl();
 		queryParams.add("filename", fileName);
 		String restResult = (String) webRes.queryParams(queryParams).get(String.class);
@@ -87,7 +98,7 @@ public class HSMMonitoringStub{
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public HSM getHSMInfo() {
-		WebResource webRes = client.resource(prop.getProperty(HSM_URL));
+		WebResource webRes = client.resource(getHSMUrl());
 		MultivaluedMap queryParams = new MultivaluedMapImpl();
 		return transformer.fromJson(webRes.queryParams(queryParams).get(String.class), HSMWrapper.class).hsm;
 	}

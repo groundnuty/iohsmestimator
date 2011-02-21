@@ -1,4 +1,11 @@
-mvn clean install
-mvn -Djetty.port=8080 jetty:run-war
+all config is in config.properties
 
-then go to http://localhost:8080/
+to create jar:
+mvn clean install
+
+how to invoke example:
+"http://localhost:51235/estimator/hsmfile/host[149.156.4.100].hsm[0]/estimation?filename=/tmp/somefile"
+
+
+
+

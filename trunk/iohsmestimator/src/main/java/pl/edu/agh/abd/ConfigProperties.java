@@ -1,37 +1,27 @@
 package pl.edu.agh.abd;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
-
 
 public class ConfigProperties extends Properties {
 
 	private static final long serialVersionUID = 1L;
 	
 	public static String ESTIMATE_INTERVAL = "estimateInterval";
-	public static String SERVER_URL = "serverUrl";
-	public static String CACHED_LATENCY_URL = "cachedLatencyUrl";
-	public static String POSITIONING_LATENCY_URL = "positioningLatencyUrl";
-	public static String LOAD_TAPE_LATENCY_URL = "loadTapeLatencyUrl";
-	public static String UNLOAD_TAPE_LATENCY_URL = "unloadTapeLatencyUrl";
-	public static String FILES_IN_QUEUE_URL = "filesInQueueUrl";
-	public static String SYSTEM_TRANSFER_RATE_URL = "systemTransferRateUrl";
-	public static String ANY_EMPTY_DRIVES_URL = "anyEmptyDrivesUrl";
-	public static String FILE_INFO_URL = "fileInfoUrl";
-	public static String BLOCK_SIZE_URL = "blockSizeUrl";
-	
+    public static String ESTIMATOR_URL = "estimatorURL";
+
+
 	public static String HSM_FILE_URL = "hsmFileURL"; 
 	public static String HSM_URL = "hsmURL";
 	
 	
 	private static ConfigProperties INSTANCE;
-	
-	
-	private ConfigProperties() throws FileNotFoundException, IOException {
+
+
+	public ConfigProperties() throws FileNotFoundException, IOException {
 		super();
-		System.out.println(new File(".").getAbsolutePath());
-	
 		load(getClass().getResourceAsStream("/config.properties"));
 	}
 	

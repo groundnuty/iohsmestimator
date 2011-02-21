@@ -3,13 +3,6 @@ package pl.edu.agh.abd.estimator;
 import pl.edu.agh.abd.estimator.mocks.*;
 import pl.edu.agh.storage.estimation.hsmclient.HSMFile;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.rmi.RemoteException;
-import java.util.Map;
-import java.util.Properties;
-import java.util.TreeMap;
 
 
 public class Estimator {
@@ -48,14 +41,14 @@ public class Estimator {
 		}
 
 		//If file is not cached and tape is not in drive and empty driver of same type as tape exists
-		if (monitoringDevice.areThereAnyEmptyDrives() &&!fileInfo.isTapeWithFileInDrive()){
+		if (monitoringDevice.areThereAnyEmptyDrives() &&!monitoringDevice.isTapeDrive(fileInfo.getTapeID())){
 			latency = fileSize/blockBandwidth + monitoringDevice.getPositioningLatency()+monitoringDevice.getLoadTapeLatency();
 			estimatedValues = new Estimation(bandwidth, latency, fileSize, fileName, blockSize);
 			return estimatedValues;
 		}
 
 		//If file is not cached and tape is in drive, and there are no files in queue
-		if (fileInfo.isTapeWithFileInDrive() && monitoringDevice.getFileQueueSize()==0){
+		if (monitoringDevice.isTapeDrive(fileInfo.getTapeID()) && monitoringDevice.getFileQueueSize()==0){
 			latency = fileSize/blockBandwidth + monitoringDevice.getPositioningLatency();
 			estimatedValues= new Estimation(bandwidth, latency, fileSize, fileName, blockSize);
 			return estimatedValues;
@@ -73,22 +66,19 @@ public class Estimator {
 			int totalFilesSize = 0;
 			int totalTapeChanges = 0;
 			int totalTapePositionings = 0;
-			HSMFileInfo prevTape = null;
-			HSMFileInfo[] fileQueue = monitoringDevice.getFilesInAQueue();
+			HSMFile prevTape = null;
+			HSMFile[] fileQueue = monitoringDevice.getFilesInAQueue();
 			for (int i=0; i<fileQueue.length; i++){
-				if (fileQueue[i].getMediaType().equals(fileInfo.getMediaType())){
-					HSMFileInfo currentFile = fileQueue[i];
+					HSMFile currentFile = fileQueue[i];
 					totalFilesSize += (currentFile.getEndBlock() - currentFile.getStartBlock());// * currentTape.getBlockSize() ;
 					totalTapePositionings++;
 					if(prevTape == null){
-						if(fileInfo.isTapeWithFileInDrive())
+						if(monitoringDevice.isTapeDrive(fileInfo.getTapeID()))
 							totalTapeChanges++;
 					}else{
 						if (!prevTape.getTapeID().equals(fileQueue[i].getTapeID()))
 							totalTapeChanges++;
 					}
-
-				}
 			}
 			latency = fileSize/blockBandwidth+totalFilesSize/blockBandwidth+totalTapeChanges*monitoringDevice.getLoadTapeLatency() +totalTapePositionings*monitoringDevice.getPositioningLatency();
 		}

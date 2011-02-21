@@ -14,7 +14,7 @@ public class PropertiesTest  extends TestCase{
 	public void testLoad(){
 		properties = ConfigProperties.getProperties();
 		
-		assertEquals(properties.get(KEY1), "url");
+		assertEquals(properties.get(ESTIMATE_INTERVAL), "5");
 	}
 	
 	

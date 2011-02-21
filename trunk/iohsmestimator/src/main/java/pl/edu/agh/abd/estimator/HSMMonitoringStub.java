@@ -12,11 +12,12 @@ import com.sun.jersey.client.apache.config.DefaultApacheHttpClientConfig;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 import pl.edu.agh.abd.ConfigProperties;
-import pl.edu.agh.abd.estimator.mocks.HSMFileInfo;
+import pl.edu.agh.storage.estimation.hsmclient.Drive;
 import pl.edu.agh.storage.estimation.hsmclient.HSM;
 import pl.edu.agh.storage.estimation.hsmclient.HSMFile;
 import pl.edu.agh.storage.estimation.hsmclient.HSMFileWrapper;
 import pl.edu.agh.storage.estimation.hsmclient.HSMWrapper;
+import pl.edu.agh.storage.estimation.hsmclient.Library;
 import static pl.edu.agh.abd.ConfigProperties.*;
 
 /**
@@ -30,12 +31,14 @@ public class HSMMonitoringStub{
 	ConfigProperties prop;
 	
 	private float cachedLatency;
-	private float positioningLatency;
-	private float loadTapeLatency;
-	private float unloadTapeLatency;
-	private HSMFileInfo[] filesInAQueue;
-	private float systemTransferRate;
+	private float positioningLatency;	//averagePositionTime
+	private float loadTapeLatency;		//averageLoadTime
+	private float unloadTapeLatency;	//averageUnloadTime
+	private HSMFile[] filesInAQueue = new HSMFile[0];
+	private float systemTransferRate;	//averageReadTransferRate
 	private HSM hsm;
+	private Library library;
+	private Drive drive;
 	
 	@SuppressWarnings("static-access")
 	public HSMMonitoringStub(){
@@ -44,14 +47,33 @@ public class HSMMonitoringStub{
 		config.getProperties().put(config.PROPERTY_HANDLE_COOKIES, Boolean.TRUE);
 		client = ApacheHttpClient.create(config);
 		prop = ConfigProperties.getProperties();
+		refreshAndInitialize();
+	}
+
+	public void refreshAndInitialize() {
 		hsm = getHSMInfo();
 		
-		//TODO !!!!!
-		//cachedLatency = transformer.fromJson(getFromServer(prop.getProperty(CACHED_LATENCY_URL), 0), Float.class);
-		//positioningLatency = transformer.fromJson(getFromServer(prop.getProperty(POSITIONING_LATENCY_URL), 0), Float.class);
-		//loadTapeLatency = transformer.fromJson(getFromServer(prop.getProperty(LOAD_TAPE_LATENCY_URL), 0), Float.class);
-		//unloadTapeLatency = transformer.fromJson(getFromServer(prop.getProperty(UNLOAD_TAPE_LATENCY_URL), 0), Float.class);
-		//systemTransferRate = transformer.fromJson(getFromServer(prop.getProperty(SYSTEM_TRANSFER_RATE_URL), 0), Float.class);
+		//now we take 1st library & 1st drive
+		for(Library lib : hsm.getLibraries()){
+			library = lib;
+			break;
+		}
+		if(null == library){
+			throw new IllegalStateException("no library defined in hsm");
+		}
+		for(Drive dr : library.getDrives()){
+			drive = dr;
+			break;
+		}
+		if(null == drive){
+			throw new IllegalStateException("no drive defined in library");
+		}
+		
+		cachedLatency = 1;
+		positioningLatency = drive.getAveragePositionTime();
+		loadTapeLatency = drive.getAverageLoadTime();
+		unloadTapeLatency = drive.getAverageUnloadTime();
+		systemTransferRate = drive.getAverageDriveReadTransferRate();
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -70,6 +92,15 @@ public class HSMMonitoringStub{
 		return transformer.fromJson(webRes.queryParams(queryParams).get(String.class), HSMWrapper.class).hsm;
 	}
 	
+	public boolean isTapeDrive(String tapeId){
+		for(Drive d: library.getDrives()){
+    		if(tapeId.equals(d.getTapeID())){
+    			return true;
+    		}
+    	}
+		return false;
+	}
+	
     public float getSystemTransferRate() {
         return systemTransferRate;
     }
@@ -80,15 +111,16 @@ public class HSMMonitoringStub{
         return filesInAQueue.length;
     }
 
-    //TODO
-    public HSMFileInfo[] getFilesInAQueue() {
-    	//filesInAQueue = transformer.fromJson(getFromServer(prop.getProperty(FILES_IN_QUEUE_URL), 0), HSMFileInfo[].class);
+    public HSMFile[] getFilesInAQueue() {
     	return filesInAQueue;
     }
 
-    //TODO
     public boolean areThereAnyEmptyDrives() {
-    	//return transformer.fromJson(getFromServer(prop.getProperty(ANY_EMPTY_DRIVES_URL), 0), Boolean.class);
+    	for(Drive d: library.getDrives()){
+    		if(null == d.getTapeID() || "".equals(d.getTapeID())){
+    			return true;
+    		}
+    	}
     	return false;
     }
 

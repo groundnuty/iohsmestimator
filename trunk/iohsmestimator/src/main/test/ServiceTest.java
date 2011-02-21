@@ -4,42 +4,24 @@ import org.junit.Test;
 import com.google.gson.Gson;
 
 import pl.edu.agh.abd.estimator.HSMMonitoringStub;
-import pl.edu.agh.abd.estimator.mocks.HSMFileInfo;
-import pl.edu.agh.storage.estimation.hsmclient.HSM;
 import pl.edu.agh.storage.estimation.hsmclient.HSMFile;
 import pl.edu.agh.storage.estimation.hsmclient.HSMFileWrapper;
 
 
 public class ServiceTest  extends TestCase{
 
-	private static final String FILE_MEDIA_TYPE = "tape";
 	private static final String FILE_IS_CACHED = "false";
 	private static final int FILE_START_BLOCK = 12;
 	private static final int FILE_END_BLOCK = 10012;
 	private static final String FILE_TAPE_ID = "1";
-	private static final boolean ANY_EMPTY_DRIVE = false;
+	private static final boolean ANY_EMPTY_DRIVE = true;
 	private static final double HSM_SYSTEM_TRANSFER_RATE = 100.0;
 	private static final double HSM_UNLOAD_TAPE_LATENCY = 10.0;
 	private static final double HSM_LOAD_TAPE_LATENCY = 10.0;
 	private static final double HSM_POSITIONING_LATENCY = 60.0;
 	private static final double HSM_CACHED_LATENCY = 1.0;
 	
-	private static final int FILES_COUNT = 2;
 	private static final String FILE_NAME = "noname";
-	
-	private static final boolean SECOND_IS_TYPE_WITH_FILE_IN_DRIVE = true;
-	private static final String SECOND_MEDIA_TYPE = FILE_MEDIA_TYPE;
-	private static final boolean SECOND_IS_CACHED = false;
-	private static final int SECOND_START_BLOCK = 12;
-	private static final int SECOND_END_BLOCK = 10012;
-	private static final String SECOND_TYPE_ID = "3";
-	
-	private static final boolean FIRST_IS_TYPE_WITH_FILE_IN_DRIVE = false;
-	private static final String FIRST_MEDIA_TYPE = FILE_MEDIA_TYPE;
-	private static final boolean FIRST_IS_CACHED = true;
-	private static final int FIRST_START_BLOCK = 12;
-	private static final int FIRST_END_BLOCK = 10012;
-	private static final String FIRST_TYPE_ID = "2";
 	
 	Gson transformer = new Gson();
 
@@ -80,40 +62,10 @@ public class ServiceTest  extends TestCase{
 	}
 	
 	@Test
-	public void testGetHSMInfo(){
-		HSMMonitoringStub stub = new HSMMonitoringStub();
-		HSM hsm = stub.getHSMInfo();
-		
-	}
-	
-	/************************************************** old tests ************************************************/
-	@Test
 	public void testFilesInQueue(){
 		HSMMonitoringStub stub = new HSMMonitoringStub();
-		HSMFileInfo[] files = stub.getFilesInAQueue();
 		
-		assertEquals(FILES_COUNT, files.length);
-		assertEquals(files.length, stub.getFileQueueSize());
-		
-		//test first
-		HSMFileInfo file = files[0];
-		
-		assertEquals(FIRST_TYPE_ID, file.getTapeID());
-		assertEquals(FIRST_END_BLOCK, file.getEndBlock());
-		assertEquals(FIRST_START_BLOCK, file.getStartBlock());
-		assertEquals(FIRST_IS_CACHED, file.isIsCached());
-		assertEquals(FIRST_MEDIA_TYPE, file.getMediaType());
-		assertEquals(FIRST_IS_TYPE_WITH_FILE_IN_DRIVE, file.isTapeWithFileInDrive());
-
-		//test second
-		file = files[1];
-		
-		assertEquals(SECOND_TYPE_ID, file.getTapeID());
-		assertEquals(SECOND_END_BLOCK, file.getEndBlock());
-		assertEquals(SECOND_START_BLOCK, file.getStartBlock());
-		assertEquals(SECOND_IS_CACHED, file.isIsCached());
-		assertEquals(SECOND_MEDIA_TYPE, file.getMediaType());
-		assertEquals(SECOND_IS_TYPE_WITH_FILE_IN_DRIVE, file.isTapeWithFileInDrive());
+		assertEquals(0, stub.getFileQueueSize());
 	}
 	
 	@Test

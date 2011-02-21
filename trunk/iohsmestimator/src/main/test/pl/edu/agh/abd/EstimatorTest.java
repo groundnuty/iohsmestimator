@@ -14,7 +14,7 @@ import pl.edu.agh.abd.estimator.mocks.Estimation;
  */
 public class EstimatorTest extends TestCase{
 
-	private static final float LATENCY = 120.00029F;
+	private static final float LATENCY = 70.000F;
 	private static final int FILE_SIZE = 10000;
 	private static final float BANDWIDTH = 100.0F;
 	private static final String FILE_NAME = "testFile";

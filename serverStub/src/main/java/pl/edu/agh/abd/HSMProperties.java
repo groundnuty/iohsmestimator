@@ -5,6 +5,7 @@ import java.util.Properties;
 
 public class HSMProperties extends Properties {
 
+	private static final long serialVersionUID = 1L;
 	public static String POSITIONING_LATENCY = "positioning_latency";
 	public static String LOAD_TAPE_LATENCY = "load_tape_latency";
 	public static String UNLOAD_TAPE_LATENCY = "unload_tape_latency";

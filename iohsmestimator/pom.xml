@@ -4,26 +4,32 @@
   <artifactId>iohsmestimator</artifactId>
   <version>1.0-SNAPSHOT</version>
   <name>iohsmestimator</name>
-  
+
   <dependencies>
 
-	    <dependency>
+    <dependency>
       <groupId>com.sun.jersey.contribs</groupId>
       <artifactId>jersey-apache-client</artifactId>
       <version>1.6-ea01</version>
       <type>jar</type>
     </dependency>
+       <dependency>
+          <groupId>org.apache.cxf</groupId>
+          <artifactId>cxf-bundle-jaxrs</artifactId>
+          <version>2.3.1</version>
+        </dependency>
+		  <dependency>
+		    <groupId>javax.servlet</groupId>
+		    <artifactId>servlet-api</artifactId>
+		    <version>2.4</version>
+		    <scope>provided</scope>
+		  </dependency>
 
 		<dependency>
 			<groupId>javax.ws.rs</groupId>
 			<artifactId>jsr311-api</artifactId>
 			 <version>1.1.1</version>
 		</dependency>
-      <dependency>
-          <groupId>org.apache.cxf</groupId>
-          <artifactId>cxf-bundle-jaxrs</artifactId>
-          <version>2.3.1</version>
-        </dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
@@ -43,7 +49,7 @@
 			<scope>test</scope>
 		</dependency>
   </dependencies>
-  
+
   	<repositories>
 		<repository>
 			<id>maven2-repository.dev.java.net</id>
@@ -66,7 +72,7 @@
 			<url>http://repo1.maven.org/maven2/</url>
 		</repository>
 	</repositories>
-	
+
 	<build>
 		<plugins>
 			<plugin>

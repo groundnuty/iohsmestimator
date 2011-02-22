@@ -2,6 +2,10 @@ package pl.edu.agh.abd.estimator;
 
 
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.URLEncoder;
 import javax.ws.rs.core.MultivaluedMap;
 
 import com.google.gson.Gson;
@@ -12,12 +16,8 @@ import com.sun.jersey.client.apache.config.DefaultApacheHttpClientConfig;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 import pl.edu.agh.abd.ConfigProperties;
-import pl.edu.agh.storage.estimation.hsmclient.Drive;
-import pl.edu.agh.storage.estimation.hsmclient.HSM;
-import pl.edu.agh.storage.estimation.hsmclient.HSMFile;
-import pl.edu.agh.storage.estimation.hsmclient.HSMFileWrapper;
-import pl.edu.agh.storage.estimation.hsmclient.HSMWrapper;
-import pl.edu.agh.storage.estimation.hsmclient.Library;
+import pl.edu.agh.storage.estimation.hsmclient.*;
+
 import static pl.edu.agh.abd.ConfigProperties.*;
 
 /**
@@ -49,7 +49,7 @@ public class HSMMonitoringStub{
 		config.getProperties().put(config.PROPERTY_HANDLE_COOKIES, Boolean.TRUE);
 		client = ApacheHttpClient.create(config);
 		prop = ConfigProperties.getProperties();
-        this.hsmId = hsmId ;
+                this.hsmId = encode(hsmId);
 		refreshAndInitialize();
 	}
 
@@ -57,10 +57,11 @@ public class HSMMonitoringStub{
 		hsm = getHSMInfo();
 		
 		//now we take 1st library & 1st drive
-		for(Library lib : hsm.getLibraries()){
+        library = hsm.getLibraries();
+		/*for(Library lib : hsm.getLibraries()){
 			library = lib;
 			break;
-		}
+		} */
 		if(null == library){
 			throw new IllegalStateException("no library defined in hsm");
 		}
@@ -80,11 +81,11 @@ public class HSMMonitoringStub{
 	}
 
     private String getHSMFileUrl(String fileName) {
-        return prop.getProperty(HSM_FILE_URL)+this.hsmId+"/";
+        return prop.getProperty(HSM_FILE_URL)+this.hsmId ;
     }
 
      private String getHSMUrl() {
-        return prop.getProperty(HSM_URL)+this.hsmId+"/";
+        return prop.getProperty(HSM_URL)+this.hsmId ;
     }
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -93,14 +94,18 @@ public class HSMMonitoringStub{
 		MultivaluedMap queryParams = new MultivaluedMapImpl();
 		queryParams.add("filename", fileName);
 		String restResult = (String) webRes.queryParams(queryParams).get(String.class);
+
 		return transformer.fromJson(restResult, HSMFileWrapper.class).hsmFile;
 	}
-	
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public HSM getHSMInfo() {
 		WebResource webRes = client.resource(getHSMUrl());
 		MultivaluedMap queryParams = new MultivaluedMapImpl();
-		return transformer.fromJson(webRes.queryParams(queryParams).get(String.class), HSMWrapper.class).hsm;
+        WebResource b = webRes.queryParams(queryParams) ;
+        String a = b.get(String.class) ;
+
+        return transformer.fromJson(a, HSMWrapper.class).hsm;
 	}
 	
 	public boolean isTapeDrive(String tapeId){
@@ -154,7 +159,20 @@ public class HSMMonitoringStub{
     }
     
     //TODO
-	public String getBlockSize(int tapeId) {
-		return "0";
+	public int getBlockSize(String tapeId) {
+        for(Tape t: library.getTapes()) {
+            if(t.getTapeID().equals(tapeId)) {
+                return t.getBlockSize() ;
+            }
+        }
+		return 1 ;
 	}
+
+    private static String encode(String url) {
+        try {
+            return URLEncoder.encode(url, "utf-8");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

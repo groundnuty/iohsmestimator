@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Library {
     Collection<Drive> drives = null;
-    Collection<Pool> pools = null;
+    Pool pools = null;
     Collection<Tape> tapes = null;
 
     /**
@@ -166,11 +166,11 @@ public class Library {
         this.drives = drives;
     }
 
-    public Collection<Pool> getPools() {
+    public Pool getPools() {
         return pools;
     }
 
-    public void setPools(Collection<Pool> pools) {
+    public void setPools(Pool pools) {
         this.pools = pools;
     }
 

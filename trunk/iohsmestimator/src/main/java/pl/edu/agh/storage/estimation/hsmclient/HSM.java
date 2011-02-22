@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class HSM {
-    private Collection<Library> libraries = null;
+    private Library libraries = null;
 
     /**
      * The HSM system mount point.
@@ -588,11 +588,11 @@ public class HSM {
         this.numberOfLibraries = numberOfLibraries;
     }
 
-    public Collection<Library> getLibraries() {
+    public Library getLibraries() {
         return libraries;
     }
 
-    public void setLibraries(Collection<Library> libraries) {
+    public void setLibraries(Library libraries) {
         this.libraries = libraries;
     }
 

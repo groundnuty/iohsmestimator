@@ -24,10 +24,10 @@ public class Estimator {
         float blockBandwidth = 0;
 
 		HSMFile fileInfo = monitoringDevice.getHSMFile(fileName);
-		String blockSize = monitoringDevice.getBlockSize(Integer.parseInt(fileInfo.getTapeID()));
+		String blockSize = new Integer(monitoringDevice.getBlockSize(fileInfo.getTapeID())).toString() ;
 		
 		//Calculating file size
-		fileSize = (fileInfo.getEndBlock()-fileInfo.getStartBlock()); //*tapeWithFile.getBlockSize(); // file size = (endBlock-startBlock)*BlockSize;
+		fileSize = fileInfo.getFileSize() ;
 		//Calculating bandwidth
 		//bandwidth = systemInfo.getMeasuredTranserRate();
 		bandwidth = monitoringDevice.getSystemTransferRate();

@@ -28,7 +28,7 @@ public class ServiceTest  extends TestCase{
 	@Test
 	public void testHSMMonitoringStubCreation(){
 		
-		HSMMonitoringStub stub = new HSMMonitoringStub();
+		HSMMonitoringStub stub = new HSMMonitoringStub("ala");
 		
 		assertEquals(HSM_CACHED_LATENCY, stub.getCachedLatency(), 0.001);
 		assertEquals(HSM_POSITIONING_LATENCY, stub.getPositioningLatency(), 0.001);
@@ -51,7 +51,7 @@ public class ServiceTest  extends TestCase{
 	
 	@Test
 	public void testGetHSMFile(){
-		HSMMonitoringStub stub = new HSMMonitoringStub();
+		HSMMonitoringStub stub = new HSMMonitoringStub("ala");
 		HSMFile file = stub.getHSMFile(FILE_NAME);
 		
 		assertEquals(FILE_NAME, file.getFilename());
@@ -63,14 +63,14 @@ public class ServiceTest  extends TestCase{
 	
 	@Test
 	public void testFilesInQueue(){
-		HSMMonitoringStub stub = new HSMMonitoringStub();
+		HSMMonitoringStub stub = new HSMMonitoringStub("ala");
 		
 		assertEquals(0, stub.getFileQueueSize());
 	}
 	
 	@Test
 	public void testAnyEmptyDrives(){
-		HSMMonitoringStub stub = new HSMMonitoringStub();
+		HSMMonitoringStub stub = new HSMMonitoringStub("ala");
 		
 		assertEquals(ANY_EMPTY_DRIVE, stub.areThereAnyEmptyDrives());
 	}

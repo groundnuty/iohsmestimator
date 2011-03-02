@@ -36,6 +36,7 @@ public class HSMMonitoringStub{
 	private float unloadTapeLatency;	//averageUnloadTime
 	private HSMFile[] filesInAQueue = new HSMFile[0];
 	private float systemTransferRate;	//averageReadTransferRate
+    public float currentTransferRate;	//averageReadTransferRate
 	private HSM hsm;
 	private Library library;
 	private Drive drive;
@@ -78,6 +79,7 @@ public class HSMMonitoringStub{
 		loadTapeLatency = drive.getAverageLoadTime();
 		unloadTapeLatency = drive.getAverageUnloadTime();
 		systemTransferRate = drive.getAverageDriveReadTransferRate();
+        currentTransferRate = hsm.getCurrentReadTransferRate() ;
 	}
 
     private String getHSMFileUrl(String fileName) {
@@ -91,10 +93,11 @@ public class HSMMonitoringStub{
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public HSMFile getHSMFile(String fileName){
 		WebResource webRes = client.resource(getHSMFileUrl(fileName));
+
 		MultivaluedMap queryParams = new MultivaluedMapImpl();
 		queryParams.add("filename", fileName);
 		String restResult = (String) webRes.queryParams(queryParams).get(String.class);
-
+        System.out.print(restResult);
 		return transformer.fromJson(restResult, HSMFileWrapper.class).hsmFile;
 	}
 
@@ -160,12 +163,12 @@ public class HSMMonitoringStub{
     
     //TODO
 	public int getBlockSize(String tapeId) {
-        for(Tape t: library.getTapes()) {
+        /*for(Tape t: library.getTapes()) {
             if(t.getTapeID().equals(tapeId)) {
                 return t.getBlockSize() ;
             }
-        }
-		return 1 ;
+        } */
+		return 64 ;
 	}
 
     private static String encode(String url) {

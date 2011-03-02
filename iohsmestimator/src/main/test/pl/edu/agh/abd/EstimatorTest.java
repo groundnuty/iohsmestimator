@@ -21,7 +21,7 @@ public class EstimatorTest extends TestCase{
 
 	@Test
     public void testEstimation(){
-        HSMMonitoringStub hsmMonitoringStub = new HSMMonitoringStub() ;
+        HSMMonitoringStub hsmMonitoringStub = new HSMMonitoringStub("host[149.156.4.100].hsm[0]") ;
         Estimator estimator = new Estimator(hsmMonitoringStub) ;
         Estimation estimation  = estimator.estimate(FILE_NAME) ;
         

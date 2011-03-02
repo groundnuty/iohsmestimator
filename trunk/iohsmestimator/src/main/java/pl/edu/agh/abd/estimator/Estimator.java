@@ -25,13 +25,14 @@ public class Estimator {
 
 		HSMFile fileInfo = monitoringDevice.getHSMFile(fileName);
 		String blockSize = new Integer(monitoringDevice.getBlockSize(fileInfo.getTapeID())).toString() ;
-		
+
 		//Calculating file size
 		fileSize = fileInfo.getFileSize() ;
+        System.out.println(fileSize);
 		//Calculating bandwidth
 		//bandwidth = systemInfo.getMeasuredTranserRate();
-		bandwidth = monitoringDevice.getSystemTransferRate();
-                blockBandwidth = bandwidth * 1024.0f * 1024.0f;// / tapeWithFile.getBlockSize();
+		bandwidth = monitoringDevice.currentTransferRate ;
+                blockBandwidth = monitoringDevice.getSystemTransferRate() * 1024.0f * 1024.0f;// / tapeWithFile.getBlockSize();
 
 		//If file is cached latency = fileSize/bandwidth + cached latency
 		if (fileInfo.isFileCached()){
